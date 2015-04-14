@@ -232,14 +232,14 @@ void phasepoints(Parameter& xi, double theta, queue<Point>& points, vector<Point
         //            U0 += U[i] / L;
         //        }
         for (int i = 0; i < L; i++) {
-            U[i] = UW(W[i]) / UW(point.x) / scale;
+            U[i] = 1;//UW(W[i]) / UW(point.x) / scale;
             //            U[i] = 1 / scale;
             dU[i] = U[i] - U0;
-            J[i] = JWij(W[i], W[mod(i + 1)]) / UW(point.x) / scale;
+            J[i] = xi[i] * x;//JWij(W[i], W[mod(i + 1)]) / UW(point.x) / scale;
             //            J[i] = JWij(point.x, point.x) / UW(point.x) / scale;
         }
-        pointRes.Ux = UW(point.x);
-        pointRes.Jx = JWij(point.x, point.x);
+        pointRes.Ux = 1;//UW(point.x);
+        pointRes.Jx = point.x;//JWij(point.x, point.x);
         pointRes.J = J;
         pointRes.U = U;
 
@@ -596,6 +596,7 @@ int main(int argc, char** argv) {
     int resi = lexical_cast<int>(argv[18]);
 
     //    bool sample = lexical_cast<bool>(argv[18]);
+    bool sample = false;
 
 #ifdef AMAZON
     //    path resdir("/home/ubuntu/Dropbox/Amazon EC2/Simulation Results/Gutzwiller Phase Diagram");
@@ -1141,7 +1142,7 @@ int main(int argc, char** argv) {
                 Point point;
                 point.x = x;
                 point.mu = mu;
-                points.push(point);
+//                points.push(point);
             }
         }
         
@@ -1211,8 +1212,8 @@ int main(int argc, char** argv) {
 
         //        double muwidth = 0.05;
         //        double muwidth = 0.01;
-        /*
-                    queue<Point> points;
+        
+//                    queue<Point> points;
                 //        bool sample = true;
                 if (sample) {
                     //            for (int ix = 0; ix < nx; ix++) {
@@ -1280,7 +1281,7 @@ int main(int argc, char** argv) {
                             points.push(point);
                         }
                     }
-                }*/
+                }
         progress_display progress(points.size());
 
         vector<PointResults> pointRes;
