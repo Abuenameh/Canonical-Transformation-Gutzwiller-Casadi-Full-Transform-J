@@ -235,7 +235,7 @@ void phasepoints(Parameter& xi, double theta, queue<Point>& points, vector<Point
             U[i] = 1;//UW(W[i]) / UW(point.x) / scale;
             //            U[i] = 1 / scale;
             dU[i] = U[i] - U0;
-            J[i] = xi[i] * x;//JWij(W[i], W[mod(i + 1)]) / UW(point.x) / scale;
+            J[i] = xi[i] * point.x;//JWij(W[i], W[mod(i + 1)]) / UW(point.x) / scale;
             //            J[i] = JWij(point.x, point.x) / UW(point.x) / scale;
         }
         pointRes.Ux = 1;//UW(point.x);
