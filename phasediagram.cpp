@@ -1243,7 +1243,7 @@ int main(int argc, char** argv) {
                     //                    points.push(point);
                     //                }
                     //            }
-                    for (int ix = 0; ix < nsampx; ix++) {
+                    /*for (int ix = 0; ix < nsampx; ix++) {
                         //            double mu0 = -3*x[ix] / 1e12 + 0.96;
                         //                double mu0 = -2.142857142857143e-12 * x[ix] + 0.942857142857143;
                         //                double mu0 = -3.301221096348316e-35 * x[ix] * x[ix] * x[ix] + 1.3058538719558353e-23 * x[ix] * x[ix] - 7.882264201707455e-13 * x[ix] + 0.0413527624303548; // Delta = 0
@@ -1270,7 +1270,7 @@ int main(int argc, char** argv) {
                             point.mu = mu[imu];
                             points.push(point);
                         }
-                    }
+                    }*/
                 }
                 else {
                     for (int imu = 0; imu < nmu; imu++) {
