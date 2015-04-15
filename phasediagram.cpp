@@ -464,6 +464,16 @@ double mufunc0u(double x) {
     return 0.9074315749308771 + 3.535326540179389e-13*x - 1.4920619709064364e-23*Power(x,2) + 1.6726582270469487e-35*Power(x,3);
 }
 
+double mufuncJ25l(double x) {
+    return 0.03319359979346252 - 3.789312655593404e-13*x + 1.081119328638128e-23*Power(x,2) - 
+   3.010175614287736e-35*Power(x,3);
+}
+
+double mufuncJ25u(double x) {
+    return 0.9115054671898886 + 1.1771878323151053e-13*x - 1.2500027018916406e-23*Power(x,2) + 
+   2.063032948198506e-36*Power(x,3) + 2.663946583692477e-47*Power(x,4);
+}
+
 void getPoints(double xmin, double xmax, int nx, double (*mufunc)(double), int nmu, double muwidth, queue<Point>& points) {
     deque<double> x(nx);
     double dx = (xmax - xmin) / (nx - 1);
@@ -1087,11 +1097,11 @@ int main(int argc, char** argv) {
 //            points.push(point);
         }
 
-        double muwidth = 0.05;
+        double muwidth = 0.1;//0.05;
         for (int ix = 0; ix < nx; ix++) {
 //            double mu0 = 0.9411179399500129 - 3.5751626448519524e-13 * x[ix] - 7.407324226206937e-24 * x[ix] * x[ix] - 1.376619100837241e-35 * x[ix] * x[ix] * x[ix] +
 //                    4.1960731262022256e-47 * x[ix] * x[ix] * x[ix] * x[ix];
-            double mu0 = mufunc0u(x[ix]);
+            double mu0 = mufuncJ25u(x[ix]);
             double mui = max(mumin, mu0 - muwidth);
             double muf = min(mumax, mu0 + muwidth);
             deque<double> mu(nmu);
@@ -1108,12 +1118,12 @@ int main(int argc, char** argv) {
                 Point point;
                 point.x = x[ix];
                 point.mu = mu[imu];
-//                                                        points.push(point);
+                                                        points.push(point);
             }
         }
         for (int ix = 0; ix < nx; ix++) {
 //            double mu0 = 0.03557224884170837 - 4.1318226651330257e-13 * x[ix] + 1.1199528880961205e-23 * x[ix] * x[ix] - 3.0330199477565917e-35 * x[ix] * x[ix] * x[ix];
-            double mu0 = mufunc0l(x[ix]);
+            double mu0 = mufuncJ25l(x[ix]);
             double mui = max(mumin, mu0 - muwidth);
             double muf = min(mumax, mu0 + muwidth);
             deque<double> mu(nmu);
@@ -1130,7 +1140,7 @@ int main(int argc, char** argv) {
                 Point point;
                 point.x = x[ix];
                 point.mu = mu[imu];
-//                                            points.push(point);
+                                            points.push(point);
             }
         }
         
@@ -1279,7 +1289,7 @@ int main(int argc, char** argv) {
                             Point point;
                             point.x = x[ix];
                             point.mu = mu[imu];
-                            points.push(point);
+//                            points.push(point);
                         }
                     }
                 }
