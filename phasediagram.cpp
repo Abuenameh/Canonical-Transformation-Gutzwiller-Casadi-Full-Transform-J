@@ -474,6 +474,14 @@ double mufuncJ25u(double x) {
             2.063032948198506e-36 * Power(x, 3) + 2.663946583692477e-47 * Power(x, 4);
 }
 
+double mufuncJl(double x) {
+    return -0.011099208425443407 + 2.0382771510194706*x - 6.122116931276068*Power(x,2) - 0.0321084372990075*Power(x,3);
+}
+
+double mufuncJu(double x) {
+    return 0.8604983321006803 + 1.946142755410184*x - 58.05078175620648*Power(x,2) + 166.32839156016544*Power(x,3);
+}
+
 void getPoints(double xmin, double xmax, int nx, double (*mufunc)(double), int nmu, double muwidth, queue<Point>& points) {
     deque<double> x(nx);
     double dx = (xmax - xmin) / (nx - 1);
@@ -683,7 +691,7 @@ int main(int argc, char** argv) {
                 //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
                 //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
                 //                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * lsampx[ix] + 2.5616067018411045e-24 * lsampx[ix] * lsampx[ix] + 1.0173988468289905e-36 * lsampx[ix] * lsampx[ix] * lsampx[ix]; // Delta = 0.25 Lower
-                double mu0 = mufuncJ25l(lsampx[ix]);
+                double mu0 = mufuncJl(lsampx[ix]);
                 double mui = max(mumin, mu0 - mulsampwidth);
                 double muf = min(mumax, mu0 + mulsampwidth);
                 deque<double> mu(nlsampmu);
@@ -774,7 +782,7 @@ int main(int argc, char** argv) {
                 //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
                 //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
                 //                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * sx + 2.5616067018411045e-24 * sx * sx + 1.0173988468289905e-36 * sx * sx * sx; // Delta = 0.25 Lower
-                double mu0 = mufuncJ25l(sx);
+                double mu0 = mufuncJl(sx);
                 double mui = max(mumin, mu0 + mulsampwidth);
                 //                double muf = 0.5;
                 double muf = max(mumin, mu0 + 2 * mulsampwidth);
@@ -799,7 +807,7 @@ int main(int argc, char** argv) {
                 //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
                 //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
                 //                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * sx + 2.5616067018411045e-24 * sx * sx + 1.0173988468289905e-36 * sx * sx * sx; // Delta = 0.25 Lower
-                double mu0 = mufuncJ25l(sx);
+                double mu0 = mufuncJl(sx);
                 double mui = max(mumin, mu0 - 2 * mulsampwidth);
                 //                double muf = 0.5;
                 double muf = max(mumin, mu0 - mulsampwidth);
@@ -821,7 +829,7 @@ int main(int argc, char** argv) {
             double muusampwidth = 0.25;
             for (int ix = 0; ix < nusampx; ix++) {
                 //                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12 * usampx[ix] - 1.9177090288512203e-23 * usampx[ix] * usampx[ix] + 9.572518996956652e-35 * usampx[ix] * usampx[ix] * usampx[ix] - 2.095759744296641e-46 * usampx[ix] * usampx[ix] * usampx[ix] * usampx[ix]; // Delta 0.25
-                double mu0 = mufuncJ25u(usampx[ix]);
+                double mu0 = mufuncJu(usampx[ix]);
                 double mui = max(mumin, mu0 - muusampwidth);
                 double muf = min(mumax, mu0 + 2 * muusampwidth);
                 deque<double> mu(nusampmu);
@@ -857,7 +865,6 @@ int main(int argc, char** argv) {
 
             for (PointResults pres : upointRes) {
                 uWmuBWfsfmin.push_back(make_tuple(pres.x, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
-                cout << BWfs(pres.fs) << "\t" << BWfmin(pres.fmin) << endl;
             }
             sort(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [](const Sample& a, const Sample & b) {
                 return get<0>(a) < get<0>(b);
@@ -955,7 +962,7 @@ int main(int argc, char** argv) {
                 if (sx > get<0>(usampbound1.back()))
                     continue;
 //                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12 * sx - 1.9177090288512203e-23 * sx * sx + 9.572518996956652e-35 * sx * sx * sx - 2.095759744296641e-46 * sx * sx * sx*sx; // Delta 0.25
-                double mu0 = mufuncJ25u(sx);
+                double mu0 = mufuncJu(sx);
                 //                double mui = 0.5;
                 double mui = min(mumax, mu0 - 2 * muusampwidth);
                 double muf = min(mumax, mu0 - muusampwidth);
@@ -977,7 +984,7 @@ int main(int argc, char** argv) {
                 if (sx > get<0>(usampbound1.back()))
                     continue;
 //                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12 * sx - 1.9177090288512203e-23 * sx * sx + 9.572518996956652e-35 * sx * sx * sx - 2.095759744296641e-46 * sx * sx * sx*sx; // Delta 0.25
-                double mu0 = mufuncJ25u(sx);
+                double mu0 = mufuncJu(sx);
                 //                double mui = 0.5;
                 double mui = min(mumax, mu0 + muusampwidth);
                 double muf = min(mumax, mu0 + 2 * muusampwidth);
