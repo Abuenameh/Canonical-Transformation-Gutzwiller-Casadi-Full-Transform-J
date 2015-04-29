@@ -571,7 +571,7 @@ int main(int argc, char** argv) {
     }
     int nusampx = lexical_cast<int>(argv[7]);
     deque<double> usampx(nusampx);
-    double xumin = 9e10;
+    double xumin = xmin;//9e10;
     double xumax = xmax; //2.2e11;
     double dusampx = (xumax - xumin) / (nusampx - 1);
     for (int isampx = 0; isampx < nusampx; isampx++) {
@@ -846,7 +846,6 @@ int main(int argc, char** argv) {
                     Point point;
                     point.x = usampx[ix];
                     point.mu = mu[imu];
-                    cout << point.x << "\t" << point.mu << endl;
                     upoints.push(point);
                     //                    points2.push(point);
                 }
@@ -866,7 +865,6 @@ int main(int argc, char** argv) {
 
             for (PointResults pres : upointRes) {
                 uWmuBWfsfmin.push_back(make_tuple(pres.x, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
-                cout << BWfs(pres.fs) << "\t" << BWfmin(pres.fmin) << endl;
             }
             sort(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [](const Sample& a, const Sample & b) {
                 return get<0>(a) < get<0>(b);
