@@ -818,7 +818,7 @@ int main(int argc, char** argv) {
             }
 
             queue<Point> upoints;
-            double muusampwidth = 0.1;
+            double muusampwidth = 0.25;
             for (int ix = 0; ix < nusampx; ix++) {
                 //                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12 * usampx[ix] - 1.9177090288512203e-23 * usampx[ix] * usampx[ix] + 9.572518996956652e-35 * usampx[ix] * usampx[ix] * usampx[ix] - 2.095759744296641e-46 * usampx[ix] * usampx[ix] * usampx[ix] * usampx[ix]; // Delta 0.25
                 double mu0 = mufuncJ25u(usampx[ix]);
