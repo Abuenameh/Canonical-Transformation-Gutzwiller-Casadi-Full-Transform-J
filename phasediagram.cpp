@@ -479,7 +479,7 @@ double mufuncJl(double x) {
 }
 
 double mufuncJu(double x) {
-    return 0.8604983321006803 + 1.946142755410184*x - 58.05078175620648*Power(x,2) + 166.32839156016544*Power(x,3);
+    return 0.9963823277261111 - 4.238008810082907*x + 4.715142928413056*Power(x,2) - 3.648935235305029*Power(x,3);
 }
 
 void getPoints(double xmin, double xmax, int nx, double (*mufunc)(double), int nmu, double muwidth, queue<Point>& points) {
@@ -681,7 +681,7 @@ int main(int argc, char** argv) {
         queue<Point> points2;
         //            if (false)
         {
-            double muwidth = 0.02;
+            double muwidth = 0.1;
             //            queue<Point> points;
 
             queue<Point> lpoints;
