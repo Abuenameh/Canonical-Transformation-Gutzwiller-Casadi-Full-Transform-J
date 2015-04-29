@@ -857,6 +857,7 @@ int main(int argc, char** argv) {
 
             for (PointResults pres : upointRes) {
                 uWmuBWfsfmin.push_back(make_tuple(pres.x, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
+                cout << BWfs(pres.fs) << "\t" << BWfmin(pres.fmin) << endl;
             }
             sort(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [](const Sample& a, const Sample & b) {
                 return get<0>(a) < get<0>(b);
@@ -865,7 +866,6 @@ int main(int argc, char** argv) {
                 return get<1>(a) < get<1>(b);
             });
             vector<Sample> usampbound1;
-            cout << "Here 1" << endl;
             for (int ix = 0; ix < nusampx; ix++) {
                 auto inner = find_if(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [&](const Sample & a) {
                     return get<0>(a) == usampx[ix] && get<3>(a) == 1;
@@ -877,20 +877,11 @@ int main(int argc, char** argv) {
                     usampbound1.push_back(*boundary);
                 }
             }
-            cout << "Here 2" << endl;
             for (int bix = 0; bix < usampbound1.size() - 1; bix++) {
-                auto qwe = usampbound1[bix];
-            cout << "Here 3" << endl;
-                auto asd = usampbound1[bix+1];
-            cout << "Here 4" << endl;
                 double x1 = get<0>(usampbound1[bix]);
-            cout << "Here 5" << endl;
                 double x2 = get<0>(usampbound1[bix + 1]);
-            cout << "Here 6" << endl;
                 double mu1 = get<1>(usampbound1[bix]);
-            cout << "Here 7" << endl;
                 double mu2 = get<1>(usampbound1[bix + 1]);
-            cout << "Here 8" << endl;
                 double dx = (x2 - x1) / (nx - 1);
                 for (int ix = 0; ix < nx; ix++) {
                     if (ix < nx - 1 || (bix == usampbound1.size() - 2)) {
