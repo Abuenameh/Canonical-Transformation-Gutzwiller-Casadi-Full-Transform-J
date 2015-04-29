@@ -846,6 +846,7 @@ int main(int argc, char** argv) {
                     Point point;
                     point.x = usampx[ix];
                     point.mu = mu[imu];
+                    cout << point.x << "\t" << point.mu << endl;
                     upoints.push(point);
                     //                    points2.push(point);
                 }
@@ -865,6 +866,7 @@ int main(int argc, char** argv) {
 
             for (PointResults pres : upointRes) {
                 uWmuBWfsfmin.push_back(make_tuple(pres.x, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
+                cout << BWfs(pres.fs) << "\t" << BWfmin(pres.fmin) << endl;
             }
             sort(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [](const Sample& a, const Sample & b) {
                 return get<0>(a) < get<0>(b);
