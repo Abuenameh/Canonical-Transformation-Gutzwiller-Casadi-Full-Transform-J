@@ -879,11 +879,14 @@ int main(int argc, char** argv) {
             }
             cout << "Here 2" << endl;
             for (int bix = 0; bix < usampbound1.size() - 1; bix++) {
+                auto qwe = usampbound1[bix];
+            cout << "Here 3" << endl;
+                auto qwe = usampbound1[bix+1];
+            cout << "Here 4" << endl;
                 double x1 = get<0>(usampbound1[bix]);
                 double x2 = get<0>(usampbound1[bix + 1]);
                 double mu1 = get<1>(usampbound1[bix]);
                 double mu2 = get<1>(usampbound1[bix + 1]);
-            cout << "Here 3" << endl;
                 double dx = (x2 - x1) / (nx - 1);
                 for (int ix = 0; ix < nx; ix++) {
                     if (ix < nx - 1 || (bix == usampbound1.size() - 2)) {
