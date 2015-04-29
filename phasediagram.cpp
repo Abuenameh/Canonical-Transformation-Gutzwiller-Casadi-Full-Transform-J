@@ -232,15 +232,15 @@ void phasepoints(Parameter& xi, double theta, queue<Point>& points, vector<Point
         //            U0 += U[i] / L;
         //        }
         for (int i = 0; i < L; i++) {
-            U[i] = 1;//UW(W[i]) / UW(point.x) / scale;
+            U[i] = 1; //UW(W[i]) / UW(point.x) / scale;
             //            U[i] = 1 / scale;
             dU[i] = U[i] - U0;
-//            J[i] = xi[i] * JWij(point.x, point.x) / UW(point.x) / scale;
-            J[i] = xi[i] * point.x;//JWij(W[i], W[mod(i + 1)]) / UW(point.x) / scale;
+            //            J[i] = xi[i] * JWij(point.x, point.x) / UW(point.x) / scale;
+            J[i] = xi[i] * point.x; //JWij(W[i], W[mod(i + 1)]) / UW(point.x) / scale;
             //            J[i] = JWij(point.x, point.x) / UW(point.x) / scale;
         }
-        pointRes.Ux = 1;//UW(point.x);
-        pointRes.Jx = point.x;//JWij(point.x, point.x);
+        pointRes.Ux = 1; //UW(point.x);
+        pointRes.Jx = point.x; //JWij(point.x, point.x);
         pointRes.J = J;
         pointRes.U = U;
 
@@ -270,7 +270,7 @@ void phasepoints(Parameter& xi, double theta, queue<Point>& points, vector<Point
             //            algo.evolve(pop0);
             //            E0 = pop0.champion().f[0];
             //            x0 = pop0.champion().x;
-//                        result gres = gopt.optimize(x0, E0);
+            //                        result gres = gopt.optimize(x0, E0);
             result res = lopt.optimize(x0, E0);
             prob->stop();
             result0 = to_string(res);
@@ -457,21 +457,21 @@ double Power(double x, double n) {
 }
 
 double mufunc0l(double x) {
-    return 0.03917614381313185 - 6.907456162736044e-13*x + 1.2840331521680782e-23*Power(x,2) - 3.341231750211011e-35*Power(x,3);
+    return 0.03917614381313185 - 6.907456162736044e-13 * x + 1.2840331521680782e-23 * Power(x, 2) - 3.341231750211011e-35 * Power(x, 3);
 }
 
 double mufunc0u(double x) {
-    return 0.9074315749308771 + 3.535326540179389e-13*x - 1.4920619709064364e-23*Power(x,2) + 1.6726582270469487e-35*Power(x,3);
+    return 0.9074315749308771 + 3.535326540179389e-13 * x - 1.4920619709064364e-23 * Power(x, 2) + 1.6726582270469487e-35 * Power(x, 3);
 }
 
 double mufuncJ25l(double x) {
-    return 0.03319359979346252 - 3.789312655593404e-13*x + 1.081119328638128e-23*Power(x,2) - 
-   3.010175614287736e-35*Power(x,3);
+    return 0.03319359979346252 - 3.789312655593404e-13 * x + 1.081119328638128e-23 * Power(x, 2) -
+            3.010175614287736e-35 * Power(x, 3);
 }
 
 double mufuncJ25u(double x) {
-    return 0.9115054671898886 + 1.1771878323151053e-13*x - 1.2500027018916406e-23*Power(x,2) + 
-   2.063032948198506e-36*Power(x,3) + 2.663946583692477e-47*Power(x,4);
+    return 0.9115054671898886 + 1.1771878323151053e-13 * x - 1.2500027018916406e-23 * Power(x, 2) +
+            2.063032948198506e-36 * Power(x, 3) + 2.663946583692477e-47 * Power(x, 4);
 }
 
 void getPoints(double xmin, double xmax, int nx, double (*mufunc)(double), int nmu, double muwidth, queue<Point>& points) {
@@ -675,14 +675,15 @@ int main(int argc, char** argv) {
         {
             double muwidth = 0.02;
             //            queue<Point> points;
-            /*
-                queue<Point> lpoints;
+
+            queue<Point> lpoints;
             double mulsampwidth = 0.075;
             for (int ix = 0; ix < nlsampx; ix++) {
                 //                double mu0 = 0.03615582350346575 - 5.005273114442404e-14*x[ix] + 6.275817853250553e-24*x[ix]*x[ix] - 1.4195907309128102e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.25
                 //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
                 //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
-                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * lsampx[ix] + 2.5616067018411045e-24 * lsampx[ix] * lsampx[ix] + 1.0173988468289905e-36 * lsampx[ix] * lsampx[ix] * lsampx[ix]; // Delta = 0.25 Lower
+                //                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * lsampx[ix] + 2.5616067018411045e-24 * lsampx[ix] * lsampx[ix] + 1.0173988468289905e-36 * lsampx[ix] * lsampx[ix] * lsampx[ix]; // Delta = 0.25 Lower
+                double mu0 = mufuncJ25l(lsampx[ix]);
                 double mui = max(mumin, mu0 - mulsampwidth);
                 double muf = min(mumax, mu0 + mulsampwidth);
                 deque<double> mu(nlsampmu);
@@ -716,7 +717,7 @@ int main(int argc, char** argv) {
             vector<Sample> lWmuBWfsfmin;
 
             for (PointResults pres : lpointRes) {
-                lWmuBWfsfmin.push_back(make_tuple(pres.W, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
+                lWmuBWfsfmin.push_back(make_tuple(pres.x, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
             }
             sort(lWmuBWfsfmin.begin(), lWmuBWfsfmin.end(), [](const Sample& a, const Sample & b) {
                 return get<0>(a) < get<0>(b);
@@ -765,61 +766,64 @@ int main(int argc, char** argv) {
             }
 
             int nldx = 5;
-            for (int ix = 0; ix < nldx*(nlsampx - 1); ix++) {
+            for (int ix = 0; ix < nldx * (nlsampx - 1); ix++) {
                 double sx = xmin + dlsampx * ix / nldx;
                 if (sx > get<0>(lsampbound.back()))
                     continue;
                 //                double mu0 = 0.03615582350346575 - 5.005273114442404e-14*x[ix] + 6.275817853250553e-24*x[ix]*x[ix] - 1.4195907309128102e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.25
                 //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
                 //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
-                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * sx + 2.5616067018411045e-24 * sx * sx + 1.0173988468289905e-36 * sx * sx * sx; // Delta = 0.25 Lower
+                //                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * sx + 2.5616067018411045e-24 * sx * sx + 1.0173988468289905e-36 * sx * sx * sx; // Delta = 0.25 Lower
+                double mu0 = mufuncJ25l(sx);
                 double mui = max(mumin, mu0 + mulsampwidth);
-//                double muf = 0.5;
-                double muf = max(mumin, mu0 + 2*mulsampwidth);
+                //                double muf = 0.5;
+                double muf = max(mumin, mu0 + 2 * mulsampwidth);
                 int nmu = 5;
                 deque<double> mu(nmu);
-                    double dmu = (muf - mui) / (nmu - 1);
-                    for (int imu = 0; imu < nmu; imu++) {
-                        mu[imu] = mui + imu * dmu;
-                    }
+                double dmu = (muf - mui) / (nmu - 1);
+                for (int imu = 0; imu < nmu; imu++) {
+                    mu[imu] = mui + imu * dmu;
+                }
                 for (int imu = 0; imu < nmu; imu++) {
                     Point point;
                     point.x = xmin + dlsampx * ix / nldx;
                     point.mu = mu[imu];
-                    points.push(point);
+                    //                    points.push(point);
                 }
             }
-            for (int ix = 0; ix < nldx*(nlsampx - 1); ix++) {
+            for (int ix = 0; ix < nldx * (nlsampx - 1); ix++) {
                 double sx = xmin + dlsampx * ix / nldx;
                 if (sx > get<0>(lsampbound.back()))
                     continue;
                 //                double mu0 = 0.03615582350346575 - 5.005273114442404e-14*x[ix] + 6.275817853250553e-24*x[ix]*x[ix] - 1.4195907309128102e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.25
                 //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
                 //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
-                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * sx + 2.5616067018411045e-24 * sx * sx + 1.0173988468289905e-36 * sx * sx * sx; // Delta = 0.25 Lower
-                double mui = max(mumin, mu0 - 2*mulsampwidth);
-//                double muf = 0.5;
+                //                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * sx + 2.5616067018411045e-24 * sx * sx + 1.0173988468289905e-36 * sx * sx * sx; // Delta = 0.25 Lower
+                double mu0 = mufuncJ25l(sx);
+                double mui = max(mumin, mu0 - 2 * mulsampwidth);
+                //                double muf = 0.5;
                 double muf = max(mumin, mu0 - mulsampwidth);
                 int nmu = 5;
                 deque<double> mu(nmu);
-                    double dmu = (muf - mui) / (nmu - 1);
-                    for (int imu = 0; imu < nmu; imu++) {
-                        mu[imu] = mui + imu * dmu;
-                    }
+                double dmu = (muf - mui) / (nmu - 1);
+                for (int imu = 0; imu < nmu; imu++) {
+                    mu[imu] = mui + imu * dmu;
+                }
                 for (int imu = 0; imu < nmu; imu++) {
                     Point point;
                     point.x = xmin + dlsampx * ix / nldx;
                     point.mu = mu[imu];
-                    points.push(point);
+                    //                    points.push(point);
                 }
-            }*/
+            }
 
-            /*queue<Point> upoints;
+            queue<Point> upoints;
             double muusampwidth = 0.1;
             for (int ix = 0; ix < nusampx; ix++) {
-                                    double mu0 = 1.0275844755940469 - 1.3286603408812447e-12*usampx[ix] - 1.9177090288512203e-23*usampx[ix]*usampx[ix] + 9.572518996956652e-35*usampx[ix]*usampx[ix]*usampx[ix] - 2.095759744296641e-46*usampx[ix]*usampx[ix]*usampx[ix]*usampx[ix]; // Delta 0.25
+                //                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12 * usampx[ix] - 1.9177090288512203e-23 * usampx[ix] * usampx[ix] + 9.572518996956652e-35 * usampx[ix] * usampx[ix] * usampx[ix] - 2.095759744296641e-46 * usampx[ix] * usampx[ix] * usampx[ix] * usampx[ix]; // Delta 0.25
+                double mu0 = mufuncJ25u(usampx[ix]);
                 double mui = max(mumin, mu0 - muusampwidth);
-                double muf = min(mumax, mu0 + 2*muusampwidth);
+                double muf = min(mumax, mu0 + 2 * muusampwidth);
                 deque<double> mu(nusampmu);
                 if (nusampmu == 1) {
                     mu[0] = mui;
@@ -835,7 +839,7 @@ int main(int argc, char** argv) {
                     point.x = usampx[ix];
                     point.mu = mu[imu];
                     upoints.push(point);
-//                    points2.push(point);
+                    //                    points2.push(point);
                 }
             }
 
@@ -852,7 +856,7 @@ int main(int argc, char** argv) {
             vector<Sample> uWmuBWfsfmin;
 
             for (PointResults pres : upointRes) {
-                uWmuBWfsfmin.push_back(make_tuple(pres.W, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
+                uWmuBWfsfmin.push_back(make_tuple(pres.x, pres.mu, BWfs(pres.fs), BWfmin(pres.fmin)));
             }
             sort(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [](const Sample& a, const Sample & b) {
                 return get<0>(a) < get<0>(b);
@@ -862,7 +866,7 @@ int main(int argc, char** argv) {
             });
             vector<Sample> usampbound1;
             for (int ix = 0; ix < nusampx; ix++) {
-                auto inner = find_if(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [&](const Sample& a) {
+                auto inner = find_if(uWmuBWfsfmin.begin(), uWmuBWfsfmin.end(), [&](const Sample & a) {
                     return get<0>(a) == usampx[ix] && get<3>(a) == 1;
                 });
                 auto boundary = find_if(inner, uWmuBWfsfmin.end(), [&](const Sample & a) {
@@ -898,12 +902,12 @@ int main(int argc, char** argv) {
                             point.x = x1 + ix * dx;
                             point.mu = mu[imu];
                             points.push(point);
-//                            points2.push(point);
+                            //                            points2.push(point);
                         }
                     }
                 }
             }
-            vector<Sample> usampbound2;
+            /*vector<Sample> usampbound2;
             for (int ix = 0; ix < nusampx; ix++) {
                 auto boundary = find_if(uWmuBWfsfmin.rbegin(), uWmuBWfsfmin.rend(), [&](const Sample & a) {
                     return get<0>(a) == usampx[ix] && get<2>(a) != 0;
@@ -938,56 +942,58 @@ int main(int argc, char** argv) {
                             point.x = x1 + ix * dx;
                             point.mu = mu[imu];
                             points.push(point);
-//                            points2.push(point);
+                            //                            points2.push(point);
                         }
                     }
                 }
-            }
+            }*/
 
             int nudx = 5;
-            for (int ix = 0; ix < nudx*(nusampx-1); ix++) {
+            for (int ix = 0; ix < nudx * (nusampx - 1); ix++) {
                 double sx = xumin + dusampx * ix / nudx;
                 if (sx > get<0>(usampbound1.back()))
                     continue;
-                                    double mu0 = 1.0275844755940469 - 1.3286603408812447e-12*sx - 1.9177090288512203e-23*sx*sx + 9.572518996956652e-35*sx*sx*sx - 2.095759744296641e-46*sx*sx*sx*sx; // Delta 0.25
-//                double mui = 0.5;
-                double mui = min(mumax, mu0 - 2*muusampwidth);
+//                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12 * sx - 1.9177090288512203e-23 * sx * sx + 9.572518996956652e-35 * sx * sx * sx - 2.095759744296641e-46 * sx * sx * sx*sx; // Delta 0.25
+                double mu0 = mufuncJ25u(sx);
+                //                double mui = 0.5;
+                double mui = min(mumax, mu0 - 2 * muusampwidth);
                 double muf = min(mumax, mu0 - muusampwidth);
                 int nmu = 5;
                 deque<double> mu(nmu);
-                    double dmu = (muf - mui) / (nmu - 1);
-                    for (int imu = 0; imu < nmu; imu++) {
-                        mu[imu] = mui + imu * dmu;
-                    }
+                double dmu = (muf - mui) / (nmu - 1);
+                for (int imu = 0; imu < nmu; imu++) {
+                    mu[imu] = mui + imu * dmu;
+                }
                 for (int imu = 0; imu < nmu; imu++) {
                     Point point;
                     point.x = xumin + dusampx * ix / nudx;
                     point.mu = mu[imu];
-//                    points.push(point);
+                    //                    points.push(point);
                 }
             }
-            for (int ix = 0; ix < nudx*(nusampx-1); ix++) {
+            for (int ix = 0; ix < nudx * (nusampx - 1); ix++) {
                 double sx = xumin + dusampx * ix / nudx;
                 if (sx > get<0>(usampbound1.back()))
                     continue;
-                                    double mu0 = 1.0275844755940469 - 1.3286603408812447e-12*sx - 1.9177090288512203e-23*sx*sx + 9.572518996956652e-35*sx*sx*sx - 2.095759744296641e-46*sx*sx*sx*sx; // Delta 0.25
-//                double mui = 0.5;
+//                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12 * sx - 1.9177090288512203e-23 * sx * sx + 9.572518996956652e-35 * sx * sx * sx - 2.095759744296641e-46 * sx * sx * sx*sx; // Delta 0.25
+                double mu0 = mufuncJ25u(sx);
+                //                double mui = 0.5;
                 double mui = min(mumax, mu0 + muusampwidth);
-                double muf = min(mumax, mu0 + 2*muusampwidth);
+                double muf = min(mumax, mu0 + 2 * muusampwidth);
                 int nmu = 5;
                 deque<double> mu(nmu);
-                    double dmu = (muf - mui) / (nmu - 1);
-                    for (int imu = 0; imu < nmu; imu++) {
-                        mu[imu] = mui + imu * dmu;
-                    }
+                double dmu = (muf - mui) / (nmu - 1);
+                for (int imu = 0; imu < nmu; imu++) {
+                    mu[imu] = mui + imu * dmu;
+                }
                 for (int imu = 0; imu < nmu; imu++) {
                     Point point;
                     point.x = xumin + dusampx * ix / nudx;
                     point.mu = mu[imu];
-//                    points.push(point);
+                    //                    points.push(point);
                 }
-            }*/
-
+            }
+            
         }
 
         double corxmin = 2e10;
@@ -1089,18 +1095,19 @@ int main(int argc, char** argv) {
         //        vector<pair<double, double>> ps({{50000000000, 0.903265}, {159500000000, 0.666948}, {234500000000, 
         //  0.166431}, {303500000000, 0.121481}, {309500000000, 0.0942961}});
         vector<pair<double, double>> ps({
-            {2.60100166944908e10, 0.0366959735767002}});
+            {2.60100166944908e10, 0.0366959735767002}
+        });
         for (pair<double, double> p : ps) {
             Point point;
             point.x = p.first;
             point.mu = p.second;
-//            points.push(point);
+            //            points.push(point);
         }
 
-        double muwidth = 0.1;//0.05;
+        double muwidth = 0.1; //0.05;
         for (int ix = 0; ix < nx; ix++) {
-//            double mu0 = 0.9411179399500129 - 3.5751626448519524e-13 * x[ix] - 7.407324226206937e-24 * x[ix] * x[ix] - 1.376619100837241e-35 * x[ix] * x[ix] * x[ix] +
-//                    4.1960731262022256e-47 * x[ix] * x[ix] * x[ix] * x[ix];
+            //            double mu0 = 0.9411179399500129 - 3.5751626448519524e-13 * x[ix] - 7.407324226206937e-24 * x[ix] * x[ix] - 1.376619100837241e-35 * x[ix] * x[ix] * x[ix] +
+            //                    4.1960731262022256e-47 * x[ix] * x[ix] * x[ix] * x[ix];
             double mu0 = mufuncJ25u(x[ix]);
             double mui = max(mumin, mu0 - muwidth);
             double muf = min(mumax, mu0 + muwidth);
@@ -1118,11 +1125,11 @@ int main(int argc, char** argv) {
                 Point point;
                 point.x = x[ix];
                 point.mu = mu[imu];
-//                                                        points.push(point);
+                //                                                        points.push(point);
             }
         }
         for (int ix = 0; ix < nx; ix++) {
-//            double mu0 = 0.03557224884170837 - 4.1318226651330257e-13 * x[ix] + 1.1199528880961205e-23 * x[ix] * x[ix] - 3.0330199477565917e-35 * x[ix] * x[ix] * x[ix];
+            //            double mu0 = 0.03557224884170837 - 4.1318226651330257e-13 * x[ix] + 1.1199528880961205e-23 * x[ix] * x[ix] - 3.0330199477565917e-35 * x[ix] * x[ix] * x[ix];
             double mu0 = mufuncJ25l(x[ix]);
             double mui = max(mumin, mu0 - muwidth);
             double muf = min(mumax, mu0 + muwidth);
@@ -1140,50 +1147,50 @@ int main(int argc, char** argv) {
                 Point point;
                 point.x = x[ix];
                 point.mu = mu[imu];
-//                                            points.push(point);
+                //                                            points.push(point);
             }
         }
-        
+
         int nmu2 = 40;
         int nx2 = 40;
         for (int ix = 0; ix < nx2; ix++) {
-            double x = 2e10 + ix*(3e11 - 2e10)/(nx2-1);
+            double x = 2e10 + ix * (3e11 - 2e10) / (nx2 - 1);
             for (int imu = 0; imu < nmu2; imu++) {
-                double mu = imu/(nmu2 - 1.);
+                double mu = imu / (nmu2 - 1.);
                 Point point;
                 point.x = x;
                 point.mu = mu;
-//                points.push(point);
+                //                points.push(point);
             }
         }
-        
+
         double muwidth2 = 0.1;
         for (int ix = 0; ix < nx2; ix++) {
-            double x = 2e10 + ix*(2.6e11 - 2e10)/(nx2-1);
-//                double mu0 = -0.018989311717356086 + 6.87667461054985e-13*x + 7.7264998850342525e-25*x*x - 2.069564731044878e-36*x*x*x;
-                double mu0 = 0.032913659749522636 - 2.9822328051812337e-13*x + 8.053722708617216e-24*x*x - 1.8763641134601787e-35*x*x*x;
-                double mui = mu0 - muwidth2;
-                double muf = mu0 + muwidth2;
+            double x = 2e10 + ix * (2.6e11 - 2e10) / (nx2 - 1);
+            //                double mu0 = -0.018989311717356086 + 6.87667461054985e-13*x + 7.7264998850342525e-25*x*x - 2.069564731044878e-36*x*x*x;
+            double mu0 = 0.032913659749522636 - 2.9822328051812337e-13 * x + 8.053722708617216e-24 * x * x - 1.8763641134601787e-35 * x * x*x;
+            double mui = mu0 - muwidth2;
+            double muf = mu0 + muwidth2;
             for (int imu = 0; imu < nmu2; imu++) {
-                double mu = mui + imu*(muf-mui)/(nmu2 - 1);
+                double mu = mui + imu * (muf - mui) / (nmu2 - 1);
                 Point point;
                 point.x = x;
                 point.mu = mu;
-//                points.push(point);
+                //                points.push(point);
             }
         }
         for (int ix = 0; ix < nx2; ix++) {
-            double x = 2e10 + ix*(2.6e11 - 2e10)/(nx2-1);
-//                double mu0 = 0.9464941207678484 - 2.5363733791190035e-13*x - 1.961773720477146e-23*x*x + 3.7097027455669513e-35*x*x*x;
-                double mu0 = 0.9681686436831983 - 8.658141185587507e-13*x - 1.101464387746557e-23*x*x + 1.1101188794879753e-35*x*x*x;
-                double mui = mu0 - muwidth2;
-                double muf = mu0 + muwidth2;
+            double x = 2e10 + ix * (2.6e11 - 2e10) / (nx2 - 1);
+            //                double mu0 = 0.9464941207678484 - 2.5363733791190035e-13*x - 1.961773720477146e-23*x*x + 3.7097027455669513e-35*x*x*x;
+            double mu0 = 0.9681686436831983 - 8.658141185587507e-13 * x - 1.101464387746557e-23 * x * x + 1.1101188794879753e-35 * x * x*x;
+            double mui = mu0 - muwidth2;
+            double muf = mu0 + muwidth2;
             for (int imu = 0; imu < nmu2; imu++) {
-                double mu = mui + imu*(muf-mui)/(nmu2 - 1);
+                double mu = mui + imu * (muf - mui) / (nmu2 - 1);
                 Point point;
                 point.x = x;
                 point.mu = mu;
-//                points.push(point);
+                //                points.push(point);
             }
         }
 
@@ -1223,76 +1230,76 @@ int main(int argc, char** argv) {
 
         //        double muwidth = 0.05;
         //        double muwidth = 0.01;
-        
-//                    queue<Point> points;
-                //        bool sample = true;
-                if (sample) {
-                    //            for (int ix = 0; ix < nx; ix++) {
-                    //                //            double mu0 = x[ix] / 1e12 + 0.05;
-                    ////                double mu0 = 7.142857142857143e-13 * x[ix] + 0.08571428571428572;
-                    ////                double mu0 = -6.333293551338674e-24 * x[ix] * x[ix] - 8.967458328360531e-13 * x[ix] + 0.9514478259139914; // Delta = 0
-                    ////                double mu0 = -1.0374437419130666e-23 * x[ix] * x[ix] - 5.901199487215756e-13 * x[ix] + 0.8982308684507191; // Delta = 0.25
-                    ////                double mu0 = -1.0374437419130666e-23 * x[ix] * x[ix] - 4.901199487215756e-13 * x[ix] + 0.8982308684507191; // Delta = 0.25
-                    //                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12*x[ix] - 1.9177090288512203e-23*x[ix]*x[ix] + 9.572518996956652e-35*x[ix]*x[ix]*x[ix] - 2.095759744296641e-46*x[ix]*x[ix]*x[ix]*x[ix]; // Delta 0.25
-                    ////                double mu0 = 0.9617950685857694 - 7.84998396963284e-13*x[ix] - 9.165384267382779e-24*x[ix]*x[ix] + 3.646236061739209e-36*x[ix]*x[ix]*x[ix] + 4.290137652003345e-48*x[ix]*x[ix]*x[ix]*x[ix]; // Delta = 0.1
-                    ////                double mu0 = 0.9311179399500129 - 3.5751626448519524e-13*x[ix] - 7.407324226206937e-24*x[ix]*x[ix] - 1.376619100837241e-35*x[ix]*x[ix]*x[ix] + 4.1960731262022256e-47*x[ix]*x[ix]*x[ix]*x[ix]; // Delta = 0
-                    //                double mui = max(mumin, mu0 - muwidth);
-                    //                double muf = min(mumax, mu0 + muwidth);
-                    //                deque<double> mu(nmu);
-                    //                if (nmu == 1) {
-                    //                    mu[0] = mui;
-                    //                } else {
-                    //                    double dmu = (muf - mui) / (nmu - 1);
-                    //                    for (int imu = 0; imu < nmu; imu++) {
-                    //                        mu[imu] = mui + imu * dmu;
-                    //                    }
-                    //                }
-                    //                for (int imu = 0; imu < nmu; imu++) {
-                    //                    Point point;
-                    //                    point.x = x[ix];
-                    //                    point.mu = mu[imu];
-                    //                    points.push(point);
-                    //                }
-                    //            }
-                    /*for (int ix = 0; ix < nsampx; ix++) {
-                        //            double mu0 = -3*x[ix] / 1e12 + 0.96;
-                        //                double mu0 = -2.142857142857143e-12 * x[ix] + 0.942857142857143;
-                        //                double mu0 = -3.301221096348316e-35 * x[ix] * x[ix] * x[ix] + 1.3058538719558353e-23 * x[ix] * x[ix] - 7.882264201707455e-13 * x[ix] + 0.0413527624303548; // Delta = 0
-                        //                double mu0 = 8.938048153734245e-36 * x[ix] * x[ix] * x[ix] - 2.202590437883966e-25 * x[ix] * x[ix] + 4.3412578706695816e-13 * x[ix] + 0.023602991053971553; // Delta = 0.25
-                        //                double mu0 = 0.03615582350346575 - 5.005273114442404e-14*x[ix] + 6.275817853250553e-24*x[ix]*x[ix] - 1.4195907309128102e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.25
-                        //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
-                        //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
-                        double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * x[ix] + 2.5616067018411045e-24 * x[ix] * x[ix] + 1.0173988468289905e-36 * x[ix] * x[ix] * x[ix]; // Delta = 0.25 Lower
-                        double mui = max(mumin, mu0 - muwidth);
-                        double muf = min(mumax, mu0 + muwidth);
-                        deque<double> mu(nmu);
-                        if (nmu == 1) {
-                            mu[0] = mui;
-                        }
-                        else {
-                            double dmu = (muf - mui) / (nmu - 1);
-                            for (int imu = 0; imu < nmu; imu++) {
-                                mu[imu] = mui + imu * dmu;
-                            }
-                        }
-                        for (int imu = 0; imu < nmu; imu++) {
-                            Point point;
-                            point.x = x[ix];
-                            point.mu = mu[imu];
-                            points.push(point);
-                        }
-                    }*/
+
+        //                    queue<Point> points;
+        //        bool sample = true;
+        if (sample) {
+            //            for (int ix = 0; ix < nx; ix++) {
+            //                //            double mu0 = x[ix] / 1e12 + 0.05;
+            ////                double mu0 = 7.142857142857143e-13 * x[ix] + 0.08571428571428572;
+            ////                double mu0 = -6.333293551338674e-24 * x[ix] * x[ix] - 8.967458328360531e-13 * x[ix] + 0.9514478259139914; // Delta = 0
+            ////                double mu0 = -1.0374437419130666e-23 * x[ix] * x[ix] - 5.901199487215756e-13 * x[ix] + 0.8982308684507191; // Delta = 0.25
+            ////                double mu0 = -1.0374437419130666e-23 * x[ix] * x[ix] - 4.901199487215756e-13 * x[ix] + 0.8982308684507191; // Delta = 0.25
+            //                double mu0 = 1.0275844755940469 - 1.3286603408812447e-12*x[ix] - 1.9177090288512203e-23*x[ix]*x[ix] + 9.572518996956652e-35*x[ix]*x[ix]*x[ix] - 2.095759744296641e-46*x[ix]*x[ix]*x[ix]*x[ix]; // Delta 0.25
+            ////                double mu0 = 0.9617950685857694 - 7.84998396963284e-13*x[ix] - 9.165384267382779e-24*x[ix]*x[ix] + 3.646236061739209e-36*x[ix]*x[ix]*x[ix] + 4.290137652003345e-48*x[ix]*x[ix]*x[ix]*x[ix]; // Delta = 0.1
+            ////                double mu0 = 0.9311179399500129 - 3.5751626448519524e-13*x[ix] - 7.407324226206937e-24*x[ix]*x[ix] - 1.376619100837241e-35*x[ix]*x[ix]*x[ix] + 4.1960731262022256e-47*x[ix]*x[ix]*x[ix]*x[ix]; // Delta = 0
+            //                double mui = max(mumin, mu0 - muwidth);
+            //                double muf = min(mumax, mu0 + muwidth);
+            //                deque<double> mu(nmu);
+            //                if (nmu == 1) {
+            //                    mu[0] = mui;
+            //                } else {
+            //                    double dmu = (muf - mui) / (nmu - 1);
+            //                    for (int imu = 0; imu < nmu; imu++) {
+            //                        mu[imu] = mui + imu * dmu;
+            //                    }
+            //                }
+            //                for (int imu = 0; imu < nmu; imu++) {
+            //                    Point point;
+            //                    point.x = x[ix];
+            //                    point.mu = mu[imu];
+            //                    points.push(point);
+            //                }
+            //            }
+            /*for (int ix = 0; ix < nsampx; ix++) {
+                //            double mu0 = -3*x[ix] / 1e12 + 0.96;
+                //                double mu0 = -2.142857142857143e-12 * x[ix] + 0.942857142857143;
+                //                double mu0 = -3.301221096348316e-35 * x[ix] * x[ix] * x[ix] + 1.3058538719558353e-23 * x[ix] * x[ix] - 7.882264201707455e-13 * x[ix] + 0.0413527624303548; // Delta = 0
+                //                double mu0 = 8.938048153734245e-36 * x[ix] * x[ix] * x[ix] - 2.202590437883966e-25 * x[ix] * x[ix] + 4.3412578706695816e-13 * x[ix] + 0.023602991053971553; // Delta = 0.25
+                //                double mu0 = 0.03615582350346575 - 5.005273114442404e-14*x[ix] + 6.275817853250553e-24*x[ix]*x[ix] - 1.4195907309128102e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.25
+                //                double mu0 = 0.025470163481530313 - 2.2719398923789667e-13*x[ix] + 8.92045173286913e-24*x[ix]*x[ix] - 2.4033506846113224e-35*x[ix]*x[ix]*x[ix]; // Delta = 0.1
+                //                double mu0 = 0.028572248841708368 - 4.1318226651330257e-13*x[ix] + 1.1199528880961205e-23*x[ix]*x[ix] - 3.0330199477565917e-35*x[ix]*x[ix]*x[ix]; // Delta = 0
+                double mu0 = 0.030969306517268605 + 1.9188880181335529e-13 * x[ix] + 2.5616067018411045e-24 * x[ix] * x[ix] + 1.0173988468289905e-36 * x[ix] * x[ix] * x[ix]; // Delta = 0.25 Lower
+                double mui = max(mumin, mu0 - muwidth);
+                double muf = min(mumax, mu0 + muwidth);
+                deque<double> mu(nmu);
+                if (nmu == 1) {
+                    mu[0] = mui;
                 }
                 else {
+                    double dmu = (muf - mui) / (nmu - 1);
                     for (int imu = 0; imu < nmu; imu++) {
-                        for (int ix = 0; ix < nx; ix++) {
-                            Point point;
-                            point.x = x[ix];
-                            point.mu = mu[imu];
-                            points.push(point);
-                        }
+                        mu[imu] = mui + imu * dmu;
                     }
                 }
+                for (int imu = 0; imu < nmu; imu++) {
+                    Point point;
+                    point.x = x[ix];
+                    point.mu = mu[imu];
+                    points.push(point);
+                }
+            }*/
+        }
+        else {
+            for (int imu = 0; imu < nmu; imu++) {
+                for (int ix = 0; ix < nx; ix++) {
+                    Point point;
+                    point.x = x[ix];
+                    point.mu = mu[imu];
+//                    points.push(point);
+                }
+            }
+        }
         progress_display progress(points.size());
 
         vector<PointResults> pointRes;
@@ -1362,7 +1369,7 @@ int main(int argc, char** argv) {
         //        printMath(os, "fn0", resi, fn0);
         printMath(os, "fmin", resi, fmin);
         //        printMath(os, "fmax", resi, fmax);
-//                printMath(os, "f0", resi, f0);
+        //                printMath(os, "f0", resi, f0);
         //        printMath(os, "fth", resi, fth);
         //        printMath(os, "f2th", resi, f2th);
         printMath(os, "E0", resi, E0);
